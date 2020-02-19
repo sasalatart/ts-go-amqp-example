@@ -1,0 +1,4 @@
+.envrc
+amqp
+build
+node_modules
