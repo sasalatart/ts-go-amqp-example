@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"runtime"
+	"time"
 
 	"github.com/streadway/amqp"
 )
@@ -14,15 +15,22 @@ func handleError(message string, err error) {
 }
 
 func createWorkers(ch *amqp.Channel, queue *amqp.Queue) {
-	for i := 0; i < runtime.NumCPU(); i++ {
-		msgs, err := consumeQueue(ch, queue)
+	failures := 0
+	for i := 0; i < runtime.NumCPU(); {
+		msgs, err := consumeChannel(ch, queue)
+		workerID := i + 1
 
 		if err != nil {
-			log.Printf("Failed to consume from queue: %v. Retrying...\n", err)
-			i--
+			failures++
+			retryingAt := time.Second << failures
+			log.Printf("Failed to consume from queue for worker %d: %v.\n", workerID, err)
+			log.Printf("Retrying in %s...", time.Duration(retryingAt/time.Second)*time.Second)
+			time.Sleep(retryingAt)
+			continue
 		}
 
-		go work(msgs, i+1)
+		go work(msgs, workerID)
+		i++
 	}
 }
 

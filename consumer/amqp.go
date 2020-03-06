@@ -33,7 +33,7 @@ func declareQueue(ch *amqp.Channel) (amqp.Queue, error) {
 	)
 }
 
-func consumeQueue(ch *amqp.Channel, queue *amqp.Queue) (<-chan amqp.Delivery, error) {
+func consumeChannel(ch *amqp.Channel, queue *amqp.Queue) (<-chan amqp.Delivery, error) {
 	return ch.Consume(
 		queue.Name, // queue
 		"",         // consumer
