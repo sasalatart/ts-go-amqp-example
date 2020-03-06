@@ -13,7 +13,7 @@ func handleError(message string, err error) {
 	}
 }
 
-func consume(ch *amqp.Channel, queue *amqp.Queue) {
+func createWorkers(ch *amqp.Channel, queue *amqp.Queue) {
 	for i := 0; i < runtime.NumCPU(); i++ {
 		msgs, err := consumeQueue(ch, queue)
 
@@ -42,6 +42,6 @@ func main() {
 	listener := make(chan bool)
 	log.Printf("%d logical CPUs available. Concurrency set to that number.\n", runtime.NumCPU())
 	log.Println("Listening for messages...")
-	go consume(ch, &queue)
+	createWorkers(ch, &queue)
 	<-listener
 }
