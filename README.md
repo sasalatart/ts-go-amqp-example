@@ -37,11 +37,7 @@ this demo has, a `goroutine` will be executed to achieve concurrency.
 3. To start the **Consumer**:
 
    1. Open a new shell and cd into the `consumer` dir
-   2. Make sure you have `github.com/streadway/amqp` package installed. If you do not, then run:
-      ```sh
-      go get github.com/streadway/amqp
-      ```
-   3. Run `go run *.go`
+   2. Run `go run .`
 
 4. To start the **Producer**:
 
